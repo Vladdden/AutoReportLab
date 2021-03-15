@@ -6,13 +6,13 @@ namespace AutoReportLab
 {
     public class Workers
     {
-        public List<Worker> workerList = new List<Worker>();
-        
+        internal readonly int workerStatus;
+        private List<Worker> workerList = new List<Worker>();
         private string pathToWorkersDirectory = $"{Directory.GetCurrentDirectory()}/Workers";
+        
         
         public Workers()
         {
-            Console.WriteLine(pathToWorkersDirectory);
             if (!Directory.Exists(pathToWorkersDirectory))
             {
                 Directory.CreateDirectory(pathToWorkersDirectory);
@@ -21,26 +21,63 @@ namespace AutoReportLab
             else
             {
                 if (File.Exists($"{pathToWorkersDirectory}/users.txt"))
+                {
                     ReadUsersFromFile();
+                    workerStatus = Login();
+                }
                 else
                     CreateFileUsers();
 
             }
         }
 
+        private int Login()
+        {
+            bool loginStatus = false;
+            int status = 0;
+            string login;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Добро пожаловать в систему!");
+                Console.Write("Введите логин: ");
+                login = Console.ReadLine();
+                Console.Write("Введите пароль: ");
+                string password = Console.ReadLine();
+                foreach (var worker in workerList)
+                {
+                    if (worker.LoginWorker(login, password) != 0)
+                    {
+                        loginStatus = true;
+                        status = worker.LoginWorker(login, password);
+                    }
+                }
+
+                if (!loginStatus)
+                {
+                    Console.WriteLine("Введены неверные имя пользователя или пароль.\nДля продолжения нажмите Enter...");
+                    Console.ReadKey();
+                }
+            } while (!loginStatus);
+            Console.WriteLine($"Добро пожаловать, {login}");
+            return status;
+        }
+        
         private void CreateFileUsers()
         {
             File.Create($"{pathToWorkersDirectory}/users.txt").Dispose();
             using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
             {
-                Worker teamLeader = new Worker(0, 0, "Admin", "1234");
+                Worker teamLeader = new Worker(0, 100, "Admin", "1234");
                 adminWriter.WriteLine(teamLeader.PrintWorker());
                 adminWriter.Close();
             }
+            Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
         }
 
         private void ReadUsersFromFile()
         {
+            // TODO очищать список перед заполнением 
             using (StreamReader usersReader = new StreamReader($"{pathToWorkersDirectory}/users.txt"))
             {
                 string info;
@@ -69,14 +106,14 @@ namespace AutoReportLab
         }
     }
 
-    public class Worker
+    internal class Worker
     {
-        private int id;
-        private int status;
-        private string name;
-        private string password;
-        private int leaderID;
-        private string employees;
+        protected int id;
+        protected int status;
+        protected string name;
+        protected string password;
+        protected int leaderID;
+        protected string employees;
 
         public Worker(int ID, int Status, string Name, string Password, int LeaderId, string Employees)
         {
@@ -115,6 +152,12 @@ namespace AutoReportLab
             employees = "no";
         }
 
+        public int LoginWorker(string Login, string Password)
+        {
+            if (Login == name && Password == password) return status;
+            else return 0;
+        }
+        
         public string PrintWorker()
         {
             return $"{id};{status};{name};{password};{leaderID};{employees};";
