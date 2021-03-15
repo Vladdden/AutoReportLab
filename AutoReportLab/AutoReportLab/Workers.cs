@@ -1,28 +1,70 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AutoReportLab
 {
     public class Workers
     {
+        public List<Worker> workerList = new List<Worker>();
+        
+        private string pathToWorkersDirectory = $"{Directory.GetCurrentDirectory()}/Workers";
+        
         public Workers()
         {
-            string pathToWorkersDirectory = $"{Directory.GetCurrentDirectory()}/Workers";
             Console.WriteLine(pathToWorkersDirectory);
             if (!Directory.Exists(pathToWorkersDirectory))
             {
                 Directory.CreateDirectory(pathToWorkersDirectory);
-                File.Create($"{pathToWorkersDirectory}/users.txt").Dispose();
-                using (StreamWriter infoWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
-                {
-                    Worker teamLeader = new Worker(0, 0, "Admin", "1234");
-                    infoWriter.WriteLine(teamLeader.PrintWorker());
-                    infoWriter.Close();
-                }
+                CreateFileUsers();
             }
             else
             {
-                
+                if (File.Exists($"{pathToWorkersDirectory}/users.txt"))
+                    ReadUsersFromFile();
+                else
+                    CreateFileUsers();
+
+            }
+        }
+
+        private void CreateFileUsers()
+        {
+            File.Create($"{pathToWorkersDirectory}/users.txt").Dispose();
+            using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
+            {
+                Worker teamLeader = new Worker(0, 0, "Admin", "1234");
+                adminWriter.WriteLine(teamLeader.PrintWorker());
+                adminWriter.Close();
+            }
+        }
+
+        private void ReadUsersFromFile()
+        {
+            using (StreamReader usersReader = new StreamReader($"{pathToWorkersDirectory}/users.txt"))
+            {
+                string info;
+                while (!usersReader.EndOfStream)
+                {
+                    info = usersReader.ReadLine();
+                    string[] values = info.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                    if (values.Length == 6)
+                    {
+                        Worker worker = new Worker( 
+                            Convert.ToInt32(values[0]), 
+                            Convert.ToInt32(values[1]), 
+                            values[2], 
+                            values[3], 
+                            Convert.ToInt32(values[4]), 
+                            values[5]);
+                        workerList.Add(worker);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неверный формат записи.");
+                        break;
+                    }
+                }
             }
         }
     }
