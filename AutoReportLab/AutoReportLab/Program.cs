@@ -11,7 +11,6 @@ namespace AutoReportLab
         }
         public static void Main(string[] args)
         {
-            
             bool isExit = false;
             switch (workers.workerStatus)
             {
@@ -51,7 +50,7 @@ namespace AutoReportLab
                         //Fio();
                         break;
                     case "2":
-                        //Rectangle();
+                        AddWorker();
                         break;
                     case "3":
                         //Average();
@@ -143,6 +142,37 @@ namespace AutoReportLab
                 Console.ReadKey();
             }
             return false;
+        }
+
+        public static void AddWorker()
+        {
+            //AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
+            Console.Write("Введите имя пользователя: ");
+            string name = Console.ReadLine();
+            Console.WriteLine("Руководители:"); 
+            Console.WriteLine("Введите номер сотрудника-руководителя:");
+            string leaderID = Console.ReadLine(); // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
+            Console.WriteLine("Варианты должностей: ");
+            Console.WriteLine("1. Руководитель.");
+            Console.WriteLine("2. Рабочий. ");
+            Console.Write("Введите номер должности сотрудника: ");
+            string status = Console.ReadLine();
+            string employees = "";
+            if (Convert.ToInt32(status) == 1)
+            {
+                Console.WriteLine("");
+                employees = Console.ReadLine(); // TODO тоже обновить поле "Руководителя" для этих тел 
+
+            }
+            Console.WriteLine("Введите пароль пользователя.");
+            string pass = Console.ReadLine();
+            if (leaderID != "" && employees == "") 
+                workers.AddWorker(Convert.ToInt32(status), name, pass, Convert.ToInt32(leaderID), employees);
+            else if (leaderID != "" && employees == "")
+                workers.AddWorker(Convert.ToInt32(status), name, pass, Convert.ToInt32(leaderID));
+            else if (leaderID == "" && employees != "")
+                workers.AddWorker(Convert.ToInt32(status), name, pass, Employees: employees);
+            else workers.AddWorker(Convert.ToInt32(status), name, pass);
         }
     }
 }

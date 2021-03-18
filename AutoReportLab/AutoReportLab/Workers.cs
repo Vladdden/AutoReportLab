@@ -75,9 +75,31 @@ namespace AutoReportLab
             Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
         }
 
+        public void AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
+        {
+            ReadUsersFromFile();
+            int ID = workerList.Count + 1;
+            try
+            {
+                using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
+                {
+                    Worker teamLeader = new Worker(ID, Status, Name, Password, LeaderId, Employees);
+                    adminWriter.WriteLine(teamLeader.PrintWorker());
+                    adminWriter.Close();
+                }
+                ReadUsersFromFile();
+                if (workerList.Count == ID && workerList[workerList.Count].GetName() == Name)
+                    Console.WriteLine("Пользователь успешно добавлен.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка при создании пользователя: " + e);
+                throw;
+            }
+        }
         private void ReadUsersFromFile()
         {
-            // TODO очищать список перед заполнением 
+            workerList.Clear();
             using (StreamReader usersReader = new StreamReader($"{pathToWorkersDirectory}/users.txt"))
             {
                 string info;
@@ -124,6 +146,7 @@ namespace AutoReportLab
             leaderID = LeaderId;
             employees = Employees;
         }
+
         public Worker(int ID, int Status, string Name, string Password, int LeaderId)
         {
             id = ID;
@@ -133,6 +156,7 @@ namespace AutoReportLab
             leaderID = LeaderId;
             employees = "no";
         }
+
         public Worker(int ID, int Status, string Name, string Password, string Employees)
         {
             id = ID;
@@ -142,6 +166,7 @@ namespace AutoReportLab
             leaderID = -1;
             employees = Employees;
         }
+
         public Worker(int ID, int Status, string Name, string Password)
         {
             id = ID;
@@ -157,7 +182,9 @@ namespace AutoReportLab
             if (Login == name && Password == password) return status;
             else return 0;
         }
-        
+
+        public string GetName() { return name; }
+
         public string PrintWorker()
         {
             return $"{id};{status};{name};{password};{leaderID};{employees};";
