@@ -36,11 +36,12 @@ namespace AutoReportLab
             while (choise != "0")
             {
                 Console.Clear();
-                Console.WriteLine("Выберите программу, которую надо запустить (или выход):");
-                Console.WriteLine("1. Ввести ФИО и вывести на экран: «Практическая работу No1 выполнил: ФИО».");
-                Console.WriteLine("2. По данным сторонам прямоугольника вычислить его периметр, площадь ");
-                Console.WriteLine("3. Даны два числа. Найти среднее арифметическое их квадратов и среднее");
-                Console.WriteLine("4. Дана длина ребра куба. Найти площадь грани, площадь полной поверхнос");
+                Console.WriteLine("Выберите действие (или выход):");
+                Console.WriteLine("1. Сиситема управления заданиями.");
+                Console.WriteLine("2. Добавить сотрудника.");
+                Console.WriteLine("3. Назначить руководителя.");
+                Console.WriteLine("4. Просмотреть своих подчиненных.");
+                Console.WriteLine("5. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
@@ -74,11 +75,11 @@ namespace AutoReportLab
             while (choise != "0")
             {
                 Console.Clear();
-                Console.WriteLine("Выберите программу, которую надо запустить (или выход):");
-                Console.WriteLine("1. Ввести ФИО и вывести на экран: «Практическая работу No1 выполнил: ФИО».");
-                Console.WriteLine("2. По данным сторонам прямоугольника вычислить его периметр, площадь ");
-                Console.WriteLine("3. Даны два числа. Найти среднее арифметическое их квадратов и среднее");
-                Console.WriteLine("4. Дана длина ребра куба. Найти площадь грани, площадь полной поверхнос");
+                Console.WriteLine("Выберите действие (или выход):");
+                Console.WriteLine("1. .");
+                Console.WriteLine("2. .");
+                Console.WriteLine("3. Просмотреть своих подчиненных.");
+                Console.WriteLine("4. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
@@ -112,11 +113,11 @@ namespace AutoReportLab
             while (choise != "0")
             {
                 Console.Clear();
-                Console.WriteLine("Выберите программу, которую надо запустить (или выход):");
-                Console.WriteLine("1. Ввести ФИО и вывести на экран: «Практическая работу No1 выполнил: ФИО».");
-                Console.WriteLine("2. По данным сторонам прямоугольника вычислить его периметр, площадь ");
-                Console.WriteLine("3. Даны два числа. Найти среднее арифметическое их квадратов и среднее");
-                Console.WriteLine("4. Дана длина ребра куба. Найти площадь грани, площадь полной поверхнос");
+                Console.WriteLine("Выберите действие (или выход):");
+                Console.WriteLine("1. .");
+                Console.WriteLine("2. Список задач.");
+                Console.WriteLine("3. Отчет за день.");
+                Console.WriteLine("4. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
