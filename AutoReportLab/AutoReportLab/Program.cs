@@ -8,8 +8,6 @@ namespace AutoReportLab
         public static void Main(string[] args)
         {
             bool isExit = false;
-            int x = workers.LeaderCheck();
-            Console.ReadKey();
             switch (workers.workerStatus)
             {
                 case 100:
@@ -39,6 +37,13 @@ namespace AutoReportLab
                 Console.WriteLine("3. Назначить руководителя.");
                 Console.WriteLine("4. Просмотреть своих подчиненных.");
                 Console.WriteLine("5. Просмотреть иерархию сотрудников.");
+                // TODO выстроить иерархию табуляциями в виде ступеней.
+                // Влад
+                //      Вова
+                //      Игорь
+                //          Антон
+                //          Таня
+                //      Петя
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
@@ -147,9 +152,9 @@ namespace AutoReportLab
             //AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
             Console.Write("Введите имя пользователя: ");
             string name = Console.ReadLine();
-            Console.WriteLine("Руководители:"); 
-            
-            string leaderID = Console.ReadLine(); // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
+            Console.WriteLine("Руководители:");
+            string leaderID = workers.LeaderCheck().ToString();
+            // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
             Console.WriteLine("Варианты должностей: ");
             Console.WriteLine("1. Руководитель.");
             Console.WriteLine("2. Рабочий. ");
@@ -158,8 +163,10 @@ namespace AutoReportLab
             string employees = "";
             if (Convert.ToInt32(status) == 1)
             {
-                Console.WriteLine("");
+                Console.WriteLine("Выбор сотрудников, находящихся в подчинении:");
                 employees = Console.ReadLine(); // TODO тоже обновить поле "Руководителя" для этих тел 
+                // TODO вывести пользователей и через запятую указать айдишники
+                // TODO создать массив из этих айдишников, который будет передаваться в функцию для обновления инфы.
 
             }
             Console.WriteLine("Введите пароль пользователя.");
@@ -171,6 +178,8 @@ namespace AutoReportLab
             else if (leaderID == "" && employees != "")
                 workers.AddWorker(Convert.ToInt32(status), name, pass, Employees: employees);
             else workers.AddWorker(Convert.ToInt32(status), name, pass);
+            Console.WriteLine("Пользователь успешно добавлен.");
+            Console.ReadKey();
         }
     }
 }

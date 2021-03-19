@@ -100,6 +100,7 @@ namespace AutoReportLab
 
         public int LeaderCheck()
         {
+            int trueID = -1;
             foreach (var worker in workerList)
             {
                 Console.WriteLine(" ________________________ ");
@@ -116,18 +117,42 @@ namespace AutoReportLab
             bool check = false;
             do
             {
-                Console.Write("Введите номер сотрудника-руководителя:");
+                Console.Write("Введите ID сотрудника-руководителя:");
                 int leaderID = Convert.ToInt32(Console.ReadLine());
                 foreach (var worker in workerList)
                 {
-                    if (worker.GetStatus() >= 10 && leaderID == worker.GetID()) check = true;
+                    if (worker.GetStatus() >= 10 && leaderID == worker.GetID())
+                    {
+                        check = true;
+                        trueID = worker.GetID();
+                    }
+                    else
+                    {
+                         Console.WriteLine("Пользователь с таким ID не обнаружен.");
+                         Console.WriteLine("Для продолжения нажмите Enter...");
+                         Console.ReadKey();
+                    }
                 }
-            } while (check);
-            
+            } while (!check);
+            return trueID;
+        }
 
+        public int PrintAllWorkers()
+        {
+            foreach (var worker in workerList)
+            {
+                Console.WriteLine(" ________________________ ");
+                Console.WriteLine("| ID |        Name       |");
+                //Console.WriteLine("|----|-------------------|");
+                if (worker.GetStatus() >= 10)
+                {
+                    Console.WriteLine("|----|-------------------|");
+                    Console.WriteLine("| {0,-3}| {1,-18}|", worker.GetID(), worker.GetName());
+                }
+                Console.WriteLine("|____|___________________|");
+            }
             return 0;
         }
-        
         private void ReadUsersFromFile()
         {
             workerList.Clear();
