@@ -69,7 +69,7 @@ namespace AutoReportLab
             using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
             {
                 Worker teamLeader = new Worker(0, 100, "Admin", "1234");
-                adminWriter.WriteLine(teamLeader.PrintWorker());
+                adminWriter.WriteLine($"{teamLeader.GetID()};{teamLeader.GetStatus()};{teamLeader.GetName()};{teamLeader.GetPassword()};{teamLeader.GetLeaderID()};{teamLeader.GetEmployee()}");
                 adminWriter.Close();
             }
             Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
@@ -79,23 +79,13 @@ namespace AutoReportLab
         {
             ReadUsersFromFile();
             int ID = workerList.Count + 1;
-            try
-            {
-                using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
-                {
-                    Worker teamLeader = new Worker(ID, Status, Name, Password, LeaderId, Employees);
-                    adminWriter.WriteLine(teamLeader.PrintWorker());
-                    adminWriter.Close();
-                }
-                ReadUsersFromFile();
-                if (workerList.Count == ID && workerList[workerList.Count].GetName() == Name)
-                    Console.WriteLine("Пользователь успешно добавлен.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Ошибка при создании пользователя: " + e);
-                throw;
-            }
+            Worker worker = new Worker(ID, Status, Name, Password, LeaderId, Employees);
+            workerList.Add(worker);        
+            UpdateWorkersFile();
+            ReadUsersFromFile();
+            if (workerList.Count == ID && workerList[workerList.Count].GetName() == Name)
+                Console.WriteLine("Пользователь успешно добавлен.");
+            else Console.WriteLine("Ошибка при создании пользователя.");
         }
 
         public int LeaderCheck()
@@ -141,18 +131,59 @@ namespace AutoReportLab
         {
             foreach (var worker in workerList)
             {
+                Console.WriteLine(" ______________________________________________________________________| ");
+                Console.WriteLine("| ID | Status |        Name       | Leader ID | Employees ");
+                if (worker.GetStatus() >= 10)
+                {
+                    Console.WriteLine("|____|________|___________________|___________|___________________|");
+                    Console.WriteLine("| {0,-3}| {1,-8}| {2,-18}| {3,-11}| {4,-24}|", worker.GetID(), worker.GetStatus(), worker.GetName(), worker.GetLeaderID(), worker.GetEmployee());
+                }
+                Console.WriteLine("|____|________|___________________|___________|___________________|");
+            }
+            return 0;
+        }
+        
+        public string EmployeesCheck(int Status)
+        {
+            string employees = "";
+            foreach (var worker in workerList)
+            {
+                
                 Console.WriteLine(" ________________________ ");
                 Console.WriteLine("| ID |        Name       |");
                 //Console.WriteLine("|----|-------------------|");
-                if (worker.GetStatus() >= 10)
+                if (worker.GetStatus() < Status)
                 {
                     Console.WriteLine("|----|-------------------|");
                     Console.WriteLine("| {0,-3}| {1,-18}|", worker.GetID(), worker.GetName());
                 }
                 Console.WriteLine("|____|___________________|");
-            }
-            return 0;
+                }
+            
+            bool check = false;
+            Console.Write("Для выхода введите 0 (ноль).");
+            do
+            {
+                Console.Write($"Введите ID подчиненного-сотрудника ({employees}):");
+                int employeeID = Convert.ToInt32(Console.ReadLine());
+                foreach (var worker in workerList)
+                {
+                    if (worker.GetStatus() < Status && employeeID == worker.GetID())
+                    {
+                        employees += $"{employeeID},";
+                    }
+                    else if (employeeID == 0) check = true;
+                    else
+                    {
+                        Console.WriteLine("Пользователь с таким ID не обнаружен.");
+                        Console.WriteLine("Для продолжения нажмите Enter...");
+                        Console.ReadKey();
+                    }
+                }
+            } while (!check);
+            return employees;
         }
+        
         private void ReadUsersFromFile()
         {
             workerList.Clear();
@@ -181,6 +212,21 @@ namespace AutoReportLab
                     }
                 }
             }
+        } 
+        
+        private void UpdateWorkersFile()
+        {
+            string path = $"{pathToWorkersDirectory}/users.txt";
+            foreach (var worker in workerList)
+            {
+                using (FileStream updateFileInfo = new FileStream(path, FileMode.Create) )
+                {
+                    StreamWriter adminWriter = new StreamWriter(updateFileInfo);
+                    Worker teamLeader = new Worker(0, 100, "Admin", "1234");
+                    adminWriter.WriteLine($"{worker.GetID()};{worker.GetStatus()};{worker.GetName()};{worker.GetPassword()};{worker.GetLeaderID()};{worker.GetEmployee()}");
+                    adminWriter.Close();
+                }
+            }
         }
     }
 
@@ -191,16 +237,16 @@ namespace AutoReportLab
         protected string name;
         protected string password;
         protected int leaderID;
-        protected string employees;
+        protected string employee;
 
-        public Worker(int ID, int Status, string Name, string Password, int LeaderId, string Employees)
+        public Worker(int ID, int Status, string Name, string Password, int LeaderId, string Employee)
         {
             id = ID;
             status = Status;
             name = Name;
             password = Password;
             leaderID = LeaderId;
-            employees = Employees;
+            employee = Employee;
         }
 
         public Worker(int ID, int Status, string Name, string Password, int LeaderId)
@@ -210,17 +256,17 @@ namespace AutoReportLab
             name = Name;
             password = Password;
             leaderID = LeaderId;
-            employees = "no";
+            employee = "no";
         }
 
-        public Worker(int ID, int Status, string Name, string Password, string Employees)
+        public Worker(int ID, int Status, string Name, string Password, string Employee)
         {
             id = ID;
             status = Status;
             name = Name;
             password = Password;
             leaderID = -1;
-            employees = Employees;
+            employee = Employee;
         }
 
         public Worker(int ID, int Status, string Name, string Password)
@@ -230,7 +276,7 @@ namespace AutoReportLab
             name = Name;
             password = Password;
             leaderID = -1;
-            employees = "no";
+            employee = "no";
         }
 
         public int LoginWorker(string Login, string Password)
@@ -240,12 +286,15 @@ namespace AutoReportLab
         }
 
         public string GetName() { return name; }
+        public string GetPassword() { return password; }
         public int GetStatus() { return status; }
         public int GetID() { return id; }
+        public int GetLeaderID() { return leaderID; }
+        public string GetEmployee() { return employee; }
+        
+        public void SetStatus(int Status) { status = Status; }
+        public void SetLeaderID(int LeaderID) { leaderID = LeaderID; }
+        public void SetEmployees(string Employee) { employee = Employee; }
 
-        public string PrintWorker()
-        {
-            return $"{id};{status};{name};{password};{leaderID};{employees};";
-        }
     }
 }
