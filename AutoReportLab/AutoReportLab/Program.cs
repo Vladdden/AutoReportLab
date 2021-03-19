@@ -4,14 +4,12 @@ namespace AutoReportLab
 {
     internal class Program
     {
-        private static Workers workers;
-        public Program()
-        {
-            workers = new Workers();
-        }
+        private static Workers workers = new Workers();
         public static void Main(string[] args)
         {
             bool isExit = false;
+            int x = workers.LeaderCheck();
+            Console.ReadKey();
             switch (workers.workerStatus)
             {
                 case 100:
@@ -150,7 +148,7 @@ namespace AutoReportLab
             Console.Write("Введите имя пользователя: ");
             string name = Console.ReadLine();
             Console.WriteLine("Руководители:"); 
-            Console.WriteLine("Введите номер сотрудника-руководителя:");
+            
             string leaderID = Console.ReadLine(); // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
             Console.WriteLine("Варианты должностей: ");
             Console.WriteLine("1. Руководитель.");

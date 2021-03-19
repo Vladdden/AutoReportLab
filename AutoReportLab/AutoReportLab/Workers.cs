@@ -97,6 +97,37 @@ namespace AutoReportLab
                 throw;
             }
         }
+
+        public int LeaderCheck()
+        {
+            foreach (var worker in workerList)
+            {
+                Console.WriteLine(" ________________________ ");
+                Console.WriteLine("| ID |        Name       |");
+                //Console.WriteLine("|----|-------------------|");
+                if (worker.GetStatus() >= 10)
+                {
+                    Console.WriteLine("|----|-------------------|");
+                    Console.WriteLine("| {0,-3}| {1,-18}|", worker.GetID(), worker.GetName());
+                }
+                Console.WriteLine("|____|___________________|");
+            }
+
+            bool check = false;
+            do
+            {
+                Console.Write("Введите номер сотрудника-руководителя:");
+                int leaderID = Convert.ToInt32(Console.ReadLine());
+                foreach (var worker in workerList)
+                {
+                    if (worker.GetStatus() >= 10 && leaderID == worker.GetID()) check = true;
+                }
+            } while (check);
+            
+
+            return 0;
+        }
+        
         private void ReadUsersFromFile()
         {
             workerList.Clear();
@@ -184,6 +215,8 @@ namespace AutoReportLab
         }
 
         public string GetName() { return name; }
+        public int GetStatus() { return status; }
+        public int GetID() { return id; }
 
         public string PrintWorker()
         {
