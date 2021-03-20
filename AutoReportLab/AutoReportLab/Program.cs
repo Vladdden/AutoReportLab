@@ -59,7 +59,8 @@ namespace AutoReportLab
                         //Average();
                         break;
                     case "4":
-                        //ShowhIerarchy();
+                        Console.WriteLine("Ваши подчиненные:");
+                        workers.Ierarchy(-1, workers.workerID, workers.workerStatus, false);
                         break;
                     case "5":
                         workers.ShowhIerarchy();
@@ -97,7 +98,8 @@ namespace AutoReportLab
                         //Rectangle();
                         break;
                     case "3":
-                        workers.Ierarchy();
+                        Console.WriteLine("Ваши подчиненные:");
+                        workers.Ierarchy(-1, workers.workerID, workers.workerStatus, false);
                         break;
                     case "4":
                         //Cube();
