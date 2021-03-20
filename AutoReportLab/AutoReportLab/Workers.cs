@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace AutoReportLab
 {
@@ -65,13 +66,17 @@ namespace AutoReportLab
         
         private void CreateFileUsers()
         {
-            File.Create($"{pathToWorkersDirectory}/users.txt").Dispose();
-            using (StreamWriter adminWriter = new StreamWriter($"{pathToWorkersDirectory}/users.txt"))
+            string path = $"{pathToWorkersDirectory}/users.txt";
+            using (FileStream updateFileInfo = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
-                Worker teamLeader = new Worker(0, 100, "Admin", "1234");
-                adminWriter.WriteLine($"{teamLeader.GetID()};{teamLeader.GetStatus()};{teamLeader.GetName()};{teamLeader.GetPassword()};{teamLeader.GetLeaderID()};{teamLeader.GetEmployee()}");
-                adminWriter.Close();
+                using (StreamWriter adminWriter = new StreamWriter(updateFileInfo))
+                {
+                    Worker teamLeader = new Worker(1, 100, "Admin", "1234");
+                    adminWriter.WriteLine($"{teamLeader.GetID()};{teamLeader.GetStatus()};{teamLeader.GetName()};{teamLeader.GetPassword()};{teamLeader.GetLeaderID()};{teamLeader.GetEmployee()}");
+                    adminWriter.Close();
+                }
             }
+
             Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
         }
 
@@ -83,7 +88,7 @@ namespace AutoReportLab
             workerList.Add(worker);        
             UpdateWorkersFile();
             ReadUsersFromFile();
-            if (workerList.Count == ID && workerList[workerList.Count].GetName() == Name)
+            if (workerList.Count == ID && workerList[workerList.Count-1].GetName() == Name)
                 Console.WriteLine("Пользователь успешно добавлен.");
             else Console.WriteLine("Ошибка при создании пользователя.");
         }
@@ -91,23 +96,22 @@ namespace AutoReportLab
         public int LeaderCheck()
         {
             int trueID = -1;
+            Console.WriteLine(" ________________________ ");
+            Console.WriteLine("| ID |        Name       |");
             foreach (var worker in workerList)
             {
-                Console.WriteLine(" ________________________ ");
-                Console.WriteLine("| ID |        Name       |");
-                //Console.WriteLine("|----|-------------------|");
                 if (worker.GetStatus() >= 10)
                 {
                     Console.WriteLine("|----|-------------------|");
                     Console.WriteLine("| {0,-3}| {1,-18}|", worker.GetID(), worker.GetName());
                 }
-                Console.WriteLine("|____|___________________|");
             }
-
+            Console.WriteLine("|____|___________________|");
+            
             bool check = false;
             do
             {
-                Console.Write("Введите ID сотрудника-руководителя:");
+                Console.Write("Введите ID сотрудника-руководителя: ");
                 int leaderID = Convert.ToInt32(Console.ReadLine());
                 foreach (var worker in workerList)
                 {
@@ -127,6 +131,27 @@ namespace AutoReportLab
             return trueID;
         }
 
+        public void ShowhIerarchy()
+        {
+            CheckEmployees();
+            Console.ReadKey();
+        }
+
+        public void CheckEmployees(int n = -1, int LeaderID = -1, int status = 1000, bool recursive = true)
+        {
+            n++;
+            status /= 10;
+            string str = new string ('\t', n);
+            foreach (var worker in workerList)
+            {
+                if (worker.GetStatus() == status && (worker.GetLeaderID() == -1 || worker.GetLeaderID() == LeaderID))
+                {
+                    Console.WriteLine(str + worker.GetID() + "." + worker.GetName());
+                    if (recursive)
+                        CheckEmployees(n, worker.GetID(), worker.GetStatus());
+                }
+            }
+        }
         public int PrintAllWorkers()
         {
             foreach (var worker in workerList)
@@ -161,10 +186,10 @@ namespace AutoReportLab
                 }
             
             bool check = false;
-            Console.Write("Для выхода введите 0 (ноль).");
+            Console.WriteLine("Для выхода введите 0 (ноль).");
             do
             {
-                Console.Write($"Введите ID подчиненного-сотрудника ({employees}):");
+                Console.Write($"Введите ID подчиненного-сотрудника ({employees}): ");
                 int employeeID = Convert.ToInt32(Console.ReadLine());
                 foreach (var worker in workerList)
                 {
@@ -208,6 +233,8 @@ namespace AutoReportLab
                     else
                     {
                         Console.WriteLine("Неверный формат записи.");
+                        Console.WriteLine(values.Length);
+                        Console.WriteLine(info);
                         break;
                     }
                 }
@@ -217,16 +244,19 @@ namespace AutoReportLab
         private void UpdateWorkersFile()
         {
             string path = $"{pathToWorkersDirectory}/users.txt";
+            File.Delete(path);
             foreach (var worker in workerList)
             {
-                using (FileStream updateFileInfo = new FileStream(path, FileMode.Create) )
+                using (FileStream updateFileInfo = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    StreamWriter adminWriter = new StreamWriter(updateFileInfo);
-                    Worker teamLeader = new Worker(0, 100, "Admin", "1234");
-                    adminWriter.WriteLine($"{worker.GetID()};{worker.GetStatus()};{worker.GetName()};{worker.GetPassword()};{worker.GetLeaderID()};{worker.GetEmployee()}");
-                    adminWriter.Close();
+                    StreamWriter writer = new StreamWriter(updateFileInfo); 
+                    string str = $"{worker.GetID()};{worker.GetStatus()};{worker.GetName()};{worker.GetPassword()};{worker.GetLeaderID()};{worker.GetEmployee()}";
+                    Console.WriteLine(str);
+                    writer.WriteLine(str);
+                    writer.Close();
                 }
             }
+            
         }
     }
 
