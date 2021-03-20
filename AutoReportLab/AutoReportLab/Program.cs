@@ -97,7 +97,7 @@ namespace AutoReportLab
                         //Rectangle();
                         break;
                     case "3":
-                        //Average();
+                        workers.Ierarchy();
                         break;
                     case "4":
                         //Cube();

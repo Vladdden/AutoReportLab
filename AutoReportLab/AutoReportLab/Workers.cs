@@ -8,6 +8,7 @@ namespace AutoReportLab
     public class Workers
     {
         internal readonly int workerStatus;
+        internal readonly int workerID;
         private List<Worker> workerList = new List<Worker>();
         private string pathToWorkersDirectory = $"{Directory.GetCurrentDirectory()}/Workers";
         
@@ -24,19 +25,22 @@ namespace AutoReportLab
                 if (File.Exists($"{pathToWorkersDirectory}/users.txt"))
                 {
                     ReadUsersFromFile();
-                    workerStatus = Login();
+                    string str = Login();
+                    string[] values = str.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                    workerID = Convert.ToInt32(values[0]);
+                    workerStatus = Convert.ToInt32(values[1]);
                 }
                 else
                     CreateFileUsers();
-
             }
         }
 
-        private int Login()
+        private string Login()
         {
             bool loginStatus = false;
-            int status = 0;
+            string status, ret = "";
             string login;
+            string[] values;
             do
             {
                 Console.Clear();
@@ -47,10 +51,10 @@ namespace AutoReportLab
                 string password = Console.ReadLine();
                 foreach (var worker in workerList)
                 {
-                    if (worker.LoginWorker(login, password) != 0)
+                    if (worker.LoginWorker(login, password) != "0")
                     {
                         loginStatus = true;
-                        status = worker.LoginWorker(login, password);
+                        ret = worker.LoginWorker(login, password);
                     }
                 }
 
@@ -61,7 +65,7 @@ namespace AutoReportLab
                 }
             } while (!loginStatus);
             Console.WriteLine($"Добро пожаловать, {login}");
-            return status;
+            return ret;
         }
         
         private void CreateFileUsers()
@@ -309,10 +313,10 @@ namespace AutoReportLab
             employee = "no";
         }
 
-        public int LoginWorker(string Login, string Password)
+        public string LoginWorker(string Login, string Password)
         {
-            if (Login == name && Password == password) return status;
-            else return 0;
+            if (Login == name && Password == password) return $"{id};{status}";
+            else return "0";
         }
 
         public string GetName() { return name; }
