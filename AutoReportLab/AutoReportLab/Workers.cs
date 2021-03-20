@@ -120,12 +120,12 @@ namespace AutoReportLab
                         check = true;
                         trueID = worker.GetID();
                     }
-                    else
-                    {
-                         Console.WriteLine("Пользователь с таким ID не обнаружен.");
-                         Console.WriteLine("Для продолжения нажмите Enter...");
-                         Console.ReadKey();
-                    }
+                }
+                if (!check)
+                {
+                    Console.WriteLine("Пользователь с таким ID не обнаружен.");
+                    Console.WriteLine("Для продолжения нажмите Enter...");
+                    Console.ReadKey();
                 }
             } while (!check);
             return trueID;
@@ -133,11 +133,11 @@ namespace AutoReportLab
 
         public void ShowhIerarchy()
         {
-            CheckEmployees();
+            Ierarchy();
             Console.ReadKey();
         }
 
-        public void CheckEmployees(int n = -1, int LeaderID = -1, int status = 1000, bool recursive = true)
+        public void Ierarchy(int n = -1, int LeaderID = -1, int status = 1000, bool recursive = true)
         {
             n++;
             status /= 10;
@@ -148,7 +148,7 @@ namespace AutoReportLab
                 {
                     Console.WriteLine(str + worker.GetID() + "." + worker.GetName());
                     if (recursive)
-                        CheckEmployees(n, worker.GetID(), worker.GetStatus());
+                        Ierarchy(n, worker.GetID(), worker.GetStatus());
                 }
             }
         }
@@ -171,24 +171,24 @@ namespace AutoReportLab
         public string EmployeesCheck(int Status)
         {
             string employees = "";
+            Console.WriteLine(" ________________________ ");
+            Console.WriteLine("| ID |        Name       |");
             foreach (var worker in workerList)
             {
-                
-                Console.WriteLine(" ________________________ ");
-                Console.WriteLine("| ID |        Name       |");
                 //Console.WriteLine("|----|-------------------|");
                 if (worker.GetStatus() < Status)
                 {
                     Console.WriteLine("|----|-------------------|");
                     Console.WriteLine("| {0,-3}| {1,-18}|", worker.GetID(), worker.GetName());
                 }
-                Console.WriteLine("|____|___________________|");
-                }
-            
+            }
+            Console.WriteLine("|____|___________________|");
             bool check = false;
+            bool choise;
             Console.WriteLine("Для выхода введите 0 (ноль).");
             do
             {
+                choise = false;
                 Console.Write($"Введите ID подчиненного-сотрудника ({employees}): ");
                 int employeeID = Convert.ToInt32(Console.ReadLine());
                 foreach (var worker in workerList)
@@ -196,14 +196,15 @@ namespace AutoReportLab
                     if (worker.GetStatus() < Status && employeeID == worker.GetID())
                     {
                         employees += $"{employeeID},";
+                        choise = true;
                     }
                     else if (employeeID == 0) check = true;
-                    else
-                    {
-                        Console.WriteLine("Пользователь с таким ID не обнаружен.");
-                        Console.WriteLine("Для продолжения нажмите Enter...");
-                        Console.ReadKey();
-                    }
+                }
+                if (!choise && !check)
+                {
+                    Console.WriteLine("Пользователь с таким ID не обнаружен.");
+                    Console.WriteLine("Для продолжения нажмите Enter...");
+                    Console.ReadKey();
                 }
             } while (!check);
             return employees;
@@ -251,7 +252,6 @@ namespace AutoReportLab
                 {
                     StreamWriter writer = new StreamWriter(updateFileInfo); 
                     string str = $"{worker.GetID()};{worker.GetStatus()};{worker.GetName()};{worker.GetPassword()};{worker.GetLeaderID()};{worker.GetEmployee()}";
-                    Console.WriteLine(str);
                     writer.WriteLine(str);
                     writer.Close();
                 }

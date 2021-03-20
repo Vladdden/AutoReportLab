@@ -155,11 +155,9 @@ namespace AutoReportLab
             //AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
             Console.Write("Введите имя пользователя: ");
             string name = Console.ReadLine();
-            Console.WriteLine("Руководители:");
-            string leaderID = workers.LeaderCheck().ToString();
-            // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
             bool tr = false;
             string employees = "";
+            string leaderID = "";
             int status;
             do
             {
@@ -181,6 +179,9 @@ namespace AutoReportLab
                 }
                 else if (status == 2)
                 {
+                    Console.WriteLine("Руководители:");
+                    leaderID = workers.LeaderCheck().ToString();
+                    // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
                     status = 1;
                     tr = true;
                 }
@@ -199,7 +200,6 @@ namespace AutoReportLab
             else if (leaderID == "" && employees != "")
                 workers.AddWorker(status, name, pass, Employees: employees);
             else workers.AddWorker(status, name, pass);
-            Console.WriteLine("Пользователь успешно добавлен.");
             Console.ReadKey();
         }
     }
