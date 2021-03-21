@@ -37,13 +37,7 @@ namespace AutoReportLab
                 Console.WriteLine("3. Назначить руководителя.");
                 Console.WriteLine("4. Просмотреть своих подчиненных.");
                 Console.WriteLine("5. Просмотреть иерархию сотрудников.");
-                // TODO выстроить иерархию табуляциями в виде ступеней.
-                // Влад
-                //      Вова
-                //      Игорь
-                //          Антон
-                //          Таня
-                //      Петя
+                
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
@@ -154,7 +148,6 @@ namespace AutoReportLab
 
         public static void AddWorker()
         {
-            //AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
             Console.Write("Введите имя пользователя: ");
             string name = Console.ReadLine();
             bool tr = false;
@@ -176,14 +169,11 @@ namespace AutoReportLab
                     Console.WriteLine("Выбор сотрудников, находящихся в подчинении:");
                     employees = workers.EmployeesCheck(10);
                     // TODO тоже обновить поле "Руководителя" для этих тел 
-                    // TODO вывести пользователей и через запятую указать айдишники
-                    // TODO создать массив из этих айдишников, который будет передаваться в функцию для обновления инфы.
                 }
                 else if (status == 2)
                 {
                     Console.WriteLine("Руководители:");
                     leaderID = workers.LeaderCheck().ToString();
-                    // TODO Выводить список сотрудников и выбирать руководителя, если он до этого не имел руководящую должность --) менять его статус
                     status = 1;
                     tr = true;
                 }
