@@ -168,6 +168,7 @@ namespace AutoReportLab
                     tr = true;
                     Console.WriteLine("Выбор сотрудников, находящихся в подчинении:");
                     employees = workers.EmployeesCheck(10);
+                    
                     // TODO тоже обновить поле "Руководителя" для этих тел 
                 }
                 else if (status == 2)
@@ -185,13 +186,16 @@ namespace AutoReportLab
             } while (!tr);
             Console.WriteLine("Введите пароль пользователя.");
             string pass = Console.ReadLine();
+            // TODO пустые строки
+            int id;
             if (leaderID != "" && employees != "") 
-                workers.AddWorker(status, name, pass, Convert.ToInt32(leaderID), employees);
+                id = workers.AddWorker(status, name, pass, Convert.ToInt32(leaderID), employees);
             else if (leaderID != "" && employees == "")
-                workers.AddWorker(status, name, pass, Convert.ToInt32(leaderID));
+                id = workers.AddWorker(status, name, pass, Convert.ToInt32(leaderID));
             else if (leaderID == "" && employees != "")
-                workers.AddWorker(status, name, pass, Employees: employees);
-            else workers.AddWorker(status, name, pass);
+                id = workers.AddWorker(status, name, pass, Employees: employees);
+            else id = workers.AddWorker(status, name, pass);
+            if (id > 0) workers.UpdateLeaders(id, employees);    
             Console.ReadKey();
         }
 

@@ -84,7 +84,7 @@ namespace AutoReportLab
             Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
         }
 
-        public void AddWorker(int Status, string Name, string Password, int LeaderId = 0, string Employees = "no")
+        public int AddWorker(int Status, string Name, string Password, int LeaderId = 1, string Employees = "no")
         {
             ReadUsersFromFile();
             int ID = workerList.Count + 1;
@@ -92,9 +92,16 @@ namespace AutoReportLab
             workerList.Add(worker);        
             UpdateWorkersFile();
             ReadUsersFromFile();
-            if (workerList.Count == ID && workerList[workerList.Count-1].GetName() == Name)
+            if (workerList.Count == ID && workerList[workerList.Count - 1].GetName() == Name)
+            {
                 Console.WriteLine("Пользователь успешно добавлен.");
-            else Console.WriteLine("Ошибка при создании пользователя.");
+                return ID;
+            }
+            else
+            {
+                Console.WriteLine("Ошибка при создании пользователя.");
+                return -1;
+            }
         }
 
         public int LeaderCheck()
@@ -172,7 +179,20 @@ namespace AutoReportLab
 
             return 0;
         }
-
+        public void UpdateLeaders(int id, string value)
+        {
+            string[] values = value.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var val in values)
+            {
+                foreach (var worker in workerList)
+                {
+                    if (worker.GetID() == Convert.ToInt32(val))
+                        worker.SetLeaderID(id);
+                }
+            }
+            UpdateWorkersFile();
+            ReadUsersFromFile();
+        }
         public void ChangeLeader(int status)
         {
             PrintAllWorkers(status);
