@@ -56,7 +56,7 @@ namespace AutoReportLab
                         AddWorker();
                         break;
                     case "3":
-                        //Average();
+                        SetBossForWorker();
                         break;
                     case "4":
                         Console.WriteLine("Ваши подчиненные:");
@@ -204,5 +204,12 @@ namespace AutoReportLab
             else workers.AddWorker(status, name, pass);
             Console.ReadKey();
         }
+
+        public static void SetBossForWorker()
+        {
+            Console.WriteLine("Выберите, кому назначить руководителя:");
+            workers.ChangeLeader(10);
+        }
+
     }
 }

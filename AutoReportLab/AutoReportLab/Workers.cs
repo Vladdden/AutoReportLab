@@ -156,20 +156,50 @@ namespace AutoReportLab
                 }
             }
         }
-        public int PrintAllWorkers()
+        public int PrintAllWorkers(int status = 1000)
         {
+            Console.WriteLine(" __________________________________________________________________ ");
+            Console.WriteLine("| ID | Status |        Name       | Leader ID |      Employees     |");
             foreach (var worker in workerList)
             {
-                Console.WriteLine(" ______________________________________________________________________| ");
-                Console.WriteLine("| ID | Status |        Name       | Leader ID | Employees ");
-                if (worker.GetStatus() >= 10)
+                if (worker.GetStatus() <= status)
                 {
-                    Console.WriteLine("|____|________|___________________|___________|___________________|");
-                    Console.WriteLine("| {0,-3}| {1,-8}| {2,-18}| {3,-11}| {4,-24}|", worker.GetID(), worker.GetStatus(), worker.GetName(), worker.GetLeaderID(), worker.GetEmployee());
+                    Console.WriteLine("|____|________|___________________|___________|____________________|");
+                    Console.WriteLine("| {0,-3}| {1,-7}| {2,-18}| {3,-10}| {4,-18} |", worker.GetID(), worker.GetStatus(), worker.GetName(), worker.GetLeaderID(), worker.GetEmployee());
                 }
-                Console.WriteLine("|____|________|___________________|___________|___________________|");
             }
+            Console.WriteLine("|____|________|___________________|___________|____________________|");
+
             return 0;
+        }
+
+        public void ChangeLeader(int status)
+        {
+            PrintAllWorkers(status);
+            bool check = false;
+            do
+            {
+                Console.Write("Введите ID сотрудника: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+                foreach (var worker in workerList)
+                {
+                    if (worker.GetStatus() <= 10 && worker.GetID() == id)
+                    {
+                        check = true;
+                        worker.SetLeaderID(LeaderCheck());
+                        UpdateWorkersFile();
+                        ReadUsersFromFile();
+                        Console.WriteLine("Новое значение успешно установлено.");
+                        return;
+                    }
+                }
+                if (!check)
+                {
+                    Console.WriteLine("Пользователь с таким ID не обнаружен.");
+                    Console.WriteLine("Для продолжения нажмите Enter...");
+                    Console.ReadKey();
+                }
+            } while (!check);
         }
         
         public string EmployeesCheck(int Status)
