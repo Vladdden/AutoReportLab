@@ -168,8 +168,6 @@ namespace AutoReportLab
                     tr = true;
                     Console.WriteLine("Выбор сотрудников, находящихся в подчинении:");
                     employees = workers.EmployeesCheck(10);
-                    
-                    // TODO тоже обновить поле "Руководителя" для этих тел 
                 }
                 else if (status == 2)
                 {
