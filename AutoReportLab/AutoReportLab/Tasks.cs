@@ -31,19 +31,54 @@ namespace AutoReportLab
             }
         }
         
-        private List<Worker> tasksList = new List<Worker>();
+        private List<Task> tasksList = new List<Task>();
         private string pathToTasksDirectory = $"{Directory.GetCurrentDirectory()}/Tasks";
         
+        public void AddTasks(string Name, string Description, int Worker, int Status, string Comment = "no")
+        {
+            //ReadTasksFromFile();
+            int ID = tasksList.Count + 1;
+            Task task = new Task(ID, Name, Description, Worker, Status, Comment);
+            tasksList.Add(task);        
+            //UpdateTasksFile();
+            //ReadTasksFromFile();
+            if (tasksList.Count == ID && tasksList[tasksList.Count - 1].GetName() == Name)
+            {
+                Console.WriteLine("Задача успешно добавлена.");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка при создании задачи.");
+            }
+        }
     }
     
     internal class Task
     {
-        protected int id;
-        protected string name; 
-        protected string description;
-        protected int worker;
-        protected int status;
-        protected string comment;
+        private int id;
+        private string name; 
+        private string description;
+        private int worker;
+        private int status;
+        private string comment;
+
+        public Task(int ID, string Name, string Description, int Worker, int Status, string Comment)
+        {
+            id = ID;
+            name = Name;
+            description = Description;
+            worker = Worker;
+            status = Status;
+            comment = Comment;
+        }
         
+        public string GetName() { return name; }
+        public int GetWorker() { return worker; }
+        public int GetStatus() { return status; }
+        public string GetComment() { return comment; }
+        
+        public void SetWorker(int Worker) { worker = Worker; }
+        public void SetStatus(int Status) { status = Status; }
+        public void SetComment(string Comment) { comment = Comment; }
     }
 }
