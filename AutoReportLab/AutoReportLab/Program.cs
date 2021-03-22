@@ -5,6 +5,7 @@ namespace AutoReportLab
     internal class Program
     {
         private static Workers workers = new Workers();
+        private static TasksManageSystem tasksManageSystem = new TasksManageSystem();
         public static void Main(string[] args)
         {
             bool isExit = false;
@@ -31,7 +32,7 @@ namespace AutoReportLab
             while (choise != "0")
             {
                 Console.Clear();
-                Console.WriteLine("Выберите действие (или выход):");
+                Console.WriteLine("Выберите действие (или выход):"); // TODO убрать везде (или выход)
                 Console.WriteLine("1. Сиситема управления заданиями.");
                 Console.WriteLine("2. Добавить сотрудника.");
                 Console.WriteLine("3. Назначить руководителя.");
@@ -44,7 +45,7 @@ namespace AutoReportLab
                 switch (choise)
                 {
                     case "1":
-                        //Fio();
+                        tasksManageSystem.Main();
                         break;
                     case "2":
                         AddWorker();
@@ -60,9 +61,9 @@ namespace AutoReportLab
                         workers.ShowhIerarchy();
                         break;
                     case "0":
-                        return true;
+                        return true; // TODO убрать return во всех циклах
                 }
-                Console.WriteLine();
+                Console.WriteLine(); // TODO убрать везде
                 Console.WriteLine("Нажмите Enter, чтобы продолжить");
                 Console.ReadKey();
             }
