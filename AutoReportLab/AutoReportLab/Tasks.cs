@@ -4,7 +4,6 @@ using System.IO;
 
 // TODO Функция создания задач
 // TODO Функция изменения задач (комментарий, состояние, назначенный сотрудник)
-// TODO Функция создание файла с задачами
 // TODO Функция чтения файла с задачами и заполнение списка 
 // TODO Функция вывода всех задач
 
@@ -20,20 +19,21 @@ namespace AutoReportLab
             if (!Directory.Exists(pathToTasksDirectory))
             {
                 Directory.CreateDirectory(pathToTasksDirectory);
-                //CreateFileTasks();
+                File.Create($"{pathToTasksDirectory}/tasks.txt").Dispose();
             }
             else
             {
-                //if (File.Exists($"{pathToWorkersDirectory}/users.txt"))
+                if (File.Exists($"{pathToTasksDirectory}/tasks.txt"))
                 {
                     //ReadTasksFromFile();
                 }
-                //else CreateFileTasks();
+                else File.Create($"{pathToTasksDirectory}/tasks.txt").Dispose();
             }
         }
         
         private List<Worker> tasksList = new List<Worker>();
         private string pathToTasksDirectory = $"{Directory.GetCurrentDirectory()}/Tasks";
+        
     }
     
     internal class Task
