@@ -71,9 +71,9 @@ namespace AutoReportLab
         private void CreateFileUsers()
         {
             string path = $"{pathToWorkersDirectory}/users.txt";
-            using (FileStream updateFileInfo = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+            using (FileStream streamWriter = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
-                using (StreamWriter adminWriter = new StreamWriter(updateFileInfo))
+                using (StreamWriter adminWriter = new StreamWriter(streamWriter))
                 {
                     Worker teamLeader = new Worker(1, 100, "Admin", "1234");
                     adminWriter.WriteLine($"{teamLeader.GetID()};{teamLeader.GetStatus()};{teamLeader.GetName()};{teamLeader.GetPassword()};{teamLeader.GetLeaderID()};{teamLeader.GetEmployee()}");
@@ -81,7 +81,9 @@ namespace AutoReportLab
                 }
             }
 
-            Console.WriteLine("Файл с пользователем создан. Перезапустите приложение.");
+            Console.WriteLine("Файл с пользователем создан. Для продолжения нажмите Enter.");
+            Console.ReadKey();
+            Program.Main(new string[] { });
         }
 
         public int AddWorker(int Status, string Name, string Password, int LeaderId = 1, string Employees = "no")
