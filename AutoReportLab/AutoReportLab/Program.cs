@@ -5,7 +5,7 @@ namespace AutoReportLab
     internal class Program
     {
         private static Workers workers = new Workers();
-        private static TasksManageSystem tasksManageSystem = new TasksManageSystem();
+        private static TasksManageSystem tasksManageSystem;
         public static void Main(string[] args)
         {
             bool isExit = false;
@@ -45,6 +45,7 @@ namespace AutoReportLab
                 switch (choise)
                 {
                     case "1":
+                        tasksManageSystem = new TasksManageSystem(workers.workerStatus);
                         tasksManageSystem.Main();
                         break;
                     case "2":
@@ -201,7 +202,7 @@ namespace AutoReportLab
         public static void SetBossForWorker()
         {
             Console.WriteLine("Выберите, кому назначить руководителя:");
-            workers.ChangeLeader(10);
+            workers.ChangeLeader(10, false);
         }
 
     }

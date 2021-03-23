@@ -4,12 +4,16 @@ namespace AutoReportLab
 {
     public class TasksManageSystem
     {
-        private Tasks tasks;
-        public TasksManageSystem()
+        public TasksManageSystem(int status)
         {
             tasks = new Tasks();
+            workerStatus = status;
         }
 
+        private Tasks tasks;
+        private Workers workers = new Workers();
+        private readonly int workerStatus;
+        
         public void Main()
         {
             string choise = "";
@@ -18,19 +22,17 @@ namespace AutoReportLab
                 Console.Clear();
                 Console.Write("Добро пожаловать в систему управления задачами!");
                 Console.WriteLine("Выберите действие:");
-                Console.WriteLine("1. .");
-                Console.WriteLine("2. .");
-                Console.WriteLine("3. .");
-                Console.WriteLine("4. .");
-                Console.WriteLine("5. .");
-                
+                Console.WriteLine("1. Добавить задачу.");
+                Console.WriteLine("2. Изменить задачу.");
+                Console.WriteLine("3. Поиск задач по критериям.");
+                Console.WriteLine("4. Посмотреть задачи своих подчиненных.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
                 switch (choise)
                 {
                     case "1":
-                        //tasksManageSystem.Main();
+                        AddNewTask();
                         break;
                     case "2":
                         //AddWorker();
@@ -39,11 +41,7 @@ namespace AutoReportLab
                         //SetBossForWorker();
                         break;
                     case "4":
-                        //Console.WriteLine("Ваши подчиненные:");
-                        //workers.Ierarchy(-1, workers.workerID, workers.workerStatus, false);
-                        break;
-                    case "5":
-                        //workers.ShowhIerarchy();
+                        tasks.ReadTaskFile();
                         break;
                     case "0":
                         break;
@@ -52,5 +50,22 @@ namespace AutoReportLab
                 Console.ReadKey();
             }
         }
+
+        private void AddNewTask()
+        {
+            Console.Write("Введите имя задачи: ");
+            string name = Console.ReadLine();
+            Console.Write("Введите описание задачи: ");
+            string description = Console.ReadLine();
+            Console.WriteLine("Выберите исполняющего сотрудника:");
+            int worker = workers.ChangeLeader(workerStatus, true);
+            Console.Write("Введите комментарий к задаче: ");
+            string comment = Console.ReadLine();
+            tasks.AddTasks(name, description, worker, 1, comment);
+            Console.ReadKey();
+        }
+
+        
+        
     }
 }

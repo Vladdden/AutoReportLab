@@ -195,7 +195,7 @@ namespace AutoReportLab
             UpdateWorkersFile();
             ReadUsersFromFile();
         }
-        public void ChangeLeader(int status)
+        public int ChangeLeader(int status, bool isTask)
         {
             PrintAllWorkers(status);
             bool check = false;
@@ -205,14 +205,18 @@ namespace AutoReportLab
                 int id = Convert.ToInt32(Console.ReadLine());
                 foreach (var worker in workerList)
                 {
-                    if (worker.GetStatus() <= 10 && worker.GetID() == id)
+                    if (worker.GetStatus() <= status && worker.GetID() == id)
                     {
                         check = true;
-                        worker.SetLeaderID(LeaderCheck());
-                        UpdateWorkersFile();
-                        ReadUsersFromFile();
-                        Console.WriteLine("Новое значение успешно установлено.");
-                        return;
+                        if (!isTask)
+                        {
+                            worker.SetLeaderID(LeaderCheck());
+                            UpdateWorkersFile();
+                            ReadUsersFromFile();
+                            Console.WriteLine("Новое значение успешно установлено.");
+                        }
+                        else return worker.GetID();
+                        break;
                     }
                 }
                 if (!check)
@@ -222,6 +226,7 @@ namespace AutoReportLab
                     Console.ReadKey();
                 }
             } while (!check);
+            return 0;
         }
         
         public string EmployeesCheck(int Status)
