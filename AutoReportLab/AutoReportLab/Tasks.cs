@@ -158,29 +158,56 @@ namespace AutoReportLab
             Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
         }
 
-        public int PrintAllTasks(bool choise)
+        public int PrintAllTasks(bool choise, int workerId = 0)
         {
+            Console.Clear();
             ReadTaskFile();
             Console.WriteLine(" ____________________________________________________________________________________________ ");
             Console.WriteLine("| ID |  Status  |       Name        | Worker |           Description/Comment              ");
             foreach (var task in tasksList)
             {
-                string status = "";
-                switch (task.GetStatus())
+                if (workerId != 0)
                 {
-                    case 1:
-                        status = "Open";
-                        break;
-                    case 2:
-                        status = "Active";
-                        break;
-                    case 3:
-                        status = "Resolved";
-                        break;
+                    if (task.GetWorkerID() == workerId)
+                    {
+                        string status = "";
+                        switch (task.GetStatus())
+                        {
+                            case 1:
+                                status = "Open";
+                                break;
+                            case 2:
+                                status = "Active";
+                                break;
+                            case 3:
+                                status = "Resolved";
+                                break;
+                        }
+
+                        Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+                        Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
+
+                    }
                 }
-                Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
-                Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
-                
+                else
+                {
+                    string status = "";
+                    switch (task.GetStatus())
+                    {
+                        case 1:
+                            status = "Open";
+                            break;
+                        case 2:
+                            status = "Active";
+                            break;
+                        case 3:
+                            status = "Resolved";
+                            break;
+                    }
+
+                    Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+                    Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
+                }
             }
             Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
             if (choise)

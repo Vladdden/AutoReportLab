@@ -65,7 +65,7 @@ namespace AutoReportLab
             Console.ReadKey();
         }
 
-        private void UpdateTasks(int ID)
+        public void UpdateTasks(int ID)
         {
             int number, num;
             string newValue;

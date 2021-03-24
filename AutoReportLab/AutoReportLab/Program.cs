@@ -6,6 +6,7 @@ namespace AutoReportLab
     {
         private static Workers workers = new Workers();
         private static TasksManageSystem tasksManageSystem;
+        private static Tasks tasks = new Tasks();
         public static void Main(string[] args)
         {
             bool isExit = false;
@@ -37,7 +38,8 @@ namespace AutoReportLab
                 Console.WriteLine("2. Добавить сотрудника.");
                 Console.WriteLine("3. Назначить руководителя.");
                 Console.WriteLine("4. Просмотреть своих подчиненных.");
-                Console.WriteLine("5. Просмотреть иерархию сотрудников.");
+                Console.WriteLine("5. Просмотреть свои задачи.");
+                Console.WriteLine("6. Просмотреть иерархию сотрудников.");
                 
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
@@ -59,6 +61,9 @@ namespace AutoReportLab
                         workers.Ierarchy(-1, workers.workerID, workers.workerStatus, false);
                         break;
                     case "5":
+                        ShowWorkerTasks();
+                        break;
+                    case "6":
                         workers.ShowhIerarchy();
                         break;
                     case "0":
@@ -78,7 +83,7 @@ namespace AutoReportLab
             {
                 Console.Clear();
                 Console.WriteLine("Выберите действие (или выход):");
-                Console.WriteLine("1. .");
+                Console.WriteLine("1. Просмотреть свои задачи.");
                 Console.WriteLine("2. .");
                 Console.WriteLine("3. Просмотреть своих подчиненных.");
                 Console.WriteLine("4. Просмотреть иерархию сотрудников.");
@@ -88,7 +93,7 @@ namespace AutoReportLab
                 switch (choise)
                 {
                     case "1":
-                        //Fio();
+                        ShowWorkerTasks();
                         break;
                     case "2":
                         //Rectangle();
@@ -98,7 +103,7 @@ namespace AutoReportLab
                         workers.Ierarchy(-1, workers.workerID, workers.workerStatus, false);
                         break;
                     case "4":
-                        //Cube();
+                        workers.ShowhIerarchy();
                         break;
                     case "0":
                         return true;
@@ -118,7 +123,7 @@ namespace AutoReportLab
                 Console.Clear();
                 Console.WriteLine("Выберите действие (или выход):");
                 Console.WriteLine("1. .");
-                Console.WriteLine("2. Список задач.");
+                Console.WriteLine("2. Просмотреть свои задачи.");
                 Console.WriteLine("3. Отчет за день.");
                 Console.WriteLine("4. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
@@ -130,13 +135,13 @@ namespace AutoReportLab
                         //Fio();
                         break;
                     case "2":
-                        //Rectangle();
+                        ShowWorkerTasks();
                         break;
                     case "3":
                         //Average();
                         break;
                     case "4":
-                        //Cube();
+                        workers.ShowhIerarchy();
                         break;
                     case "0":
                         return true;
@@ -199,11 +204,23 @@ namespace AutoReportLab
             Console.ReadKey();
         }
 
-        public static void SetBossForWorker()
+        private static void ShowWorkerTasks()
+        {
+            tasks.PrintAllTasks(false, workers.workerID);
+            Console.WriteLine("Желаете внести изменения (статус, исполняющий сотрудник, комментарий)? ");
+            string answer = Console.ReadLine();
+            if (answer != "Да" || answer != "да" || answer != "ДА")
+            {
+                tasksManageSystem = new TasksManageSystem(workers.workerStatus);
+                tasksManageSystem.UpdateTasks(tasks.PrintAllTasks(true, workers.workerID));
+            }
+            else if (answer != "Нет" || answer != "нет" || answer != "НЕТ") return;
+        }
+        
+        private static void SetBossForWorker()
         {
             Console.WriteLine("Выберите, кому назначить руководителя:");
             workers.ChangeLeader(10, false);
         }
-
     }
 }
