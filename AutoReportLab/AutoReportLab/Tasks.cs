@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
 // TODO Функция изменения задач (комментарий, состояние, назначенный сотрудник)
@@ -57,20 +59,156 @@ namespace AutoReportLab
             File.Create(path).Dispose();
             using (StreamWriter writer = new StreamWriter(path))
             {
-                string str = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()}";
+                string str = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";
                 writer.WriteLine(str);
             }
+        }
+
+        public void UpdateTasks(int ID, int field, string newValue)
+        {
+            foreach (var task in tasksList)
+            {
+                if (task.GetID() == ID)
+                {
+                    switch (field)
+                    {
+                        case 1:
+                            if (newValue == "1")
+                            {
+                                task.SetStatus(1);
+                                task.SetStatusID(task.GetStatusID() + 1);
+                                task.SetTime(DateTime.Now);
+                            }
+                            else if (newValue == "2")
+                            {
+                                task.SetStatus(2);
+                                task.SetStatusID(task.GetStatusID() + 1);
+                                task.SetTime(DateTime.Now);
+                            }
+                            else if (newValue == "3")
+                            {
+                                task.SetStatus(3);
+                                task.SetStatusID(task.GetStatusID() + 1);
+                                task.SetTime(DateTime.Now);
+                            }
+                            AppendTaskFile(task);
+                            Console.WriteLine("Значение изменено.");
+                            return;
+                        case 2:
+                            int worker;
+                            if (Int32.TryParse(newValue, out worker))
+                            {
+                                task.SetWorker(worker);
+                                task.SetWorkerID(task.GetWorkerID() + 1);
+                                task.SetTime(DateTime.Now);
+                                AppendTaskFile(task);
+                                Console.WriteLine("Значение изменено.");
+                            }
+                            return;
+                        case 3:
+                            task.SetComment(newValue);
+                            task.SetCommentID(task.GetCommentID() + 1);
+                            task.SetTime(DateTime.Now);
+                            AppendTaskFile(task); 
+                            Console.WriteLine("Значение изменено.");
+                            return;
+                    }
+                }
+            }
+            Console.WriteLine("Ошибка во время изменения. Проверьте введенные данные и повторите попытку.");
+            return;
+        }
+        
+        private void AppendTaskFile(Task task)
+        {
+            string path = $"{pathToTasksDirectory}/{task.GetName()}.txt";
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                string str = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";
+                writer.WriteLine(str);
+            }
+        }
+
+        public void PrintOneTask(int id)
+        {
+            Console.WriteLine(" ____________________________________________________________________________________________ ");
+            Console.WriteLine("| ID |  Status  |       Name        | Worker |           Description/Comment              ");
+            foreach (var task in tasksList)
+            {
+                if (task.GetID() == id)
+                {
+                    string status = "";
+                    switch (task.GetStatus())
+                    {
+                        case 1:
+                            status = "Open";
+                            break;
+                        case 2:
+                            status = "Active";
+                            break;
+                        case 3:
+                            status = "Resolved";
+                            break;
+                    }
+                    Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+                    Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
+                    break;
+                }
+            }
+            Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+        }
+
+        public int PrintAllTasks(bool choise)
+        {
+            ReadTaskFile();
+            Console.WriteLine(" ____________________________________________________________________________________________ ");
+            Console.WriteLine("| ID |  Status  |       Name        | Worker |           Description/Comment              ");
+            foreach (var task in tasksList)
+            {
+                string status = "";
+                switch (task.GetStatus())
+                {
+                    case 1:
+                        status = "Open";
+                        break;
+                    case 2:
+                        status = "Active";
+                        break;
+                    case 3:
+                        status = "Resolved";
+                        break;
+                }
+                Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+                Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
+                
+            }
+            Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+            if (choise)
+            {
+                bool check = false;
+                do
+                {
+                    Console.Write("Введите ID задачи: ");
+                    int id = Convert.ToInt32(Console.ReadLine());
+                    foreach (var task in tasksList)
+                        if (task.GetID() == id) return id;
+                    if (!check)
+                    {
+                        Console.WriteLine("Задача с таким ID не обнаружена.");
+                        Console.WriteLine("Для продолжения нажмите Enter...");
+                        Console.ReadKey();
+                    }
+                } while (!check);
+            }
+            return 0;
         }
         
         public void ReadTaskFile()
         {
             try
             {
-                int id_id;
                 int ID; 
-                int id_name;
                 string Name;
-                int id_description;
                 string Description;
                 int id_worker;
                 int Worker;
@@ -78,22 +216,29 @@ namespace AutoReportLab
                 int Status;
                 int id_comment;
                 string Comment;
+                DateTime time;
                 tasksList.Clear();
                 
                 string path = $"{pathToTasksDirectory}";
                 string[] files = Directory.GetFiles(path);
                 foreach (var file in files)
                 {
-                    string str = "";
+                    string str = "", str2 = "";
                     using (StreamReader reader = new StreamReader(file))
                     {
                         while (!reader.EndOfStream)
-                        { str = reader.ReadLine(); }
+                        {
+                            str2 = reader.ReadLine();
+                            if (str2 != "")
+                            {
+                                str = str2;
+                            }
+                        }
                     }
 
                     string[] fields = str.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
                     string[] field;
-                    if (fields.Length == 6)
+                    if (fields.Length == 7)
                     {
                         ID = Convert.ToInt32(fields[0]);
                         Name = fields[1];
@@ -107,16 +252,18 @@ namespace AutoReportLab
                         field = fields[5].Split(new char[] {':'}, StringSplitOptions.RemoveEmptyEntries);
                         id_comment = Convert.ToInt32(field[0]);
                         Comment = field[1];
-                        Task task = new Task(ID, Name, Description, Worker, Status, Comment);
+                        time = Convert.ToDateTime(fields[6]);
+                        Task task = new Task(ID, Name, Description, Worker, Status, Comment, time);
                         task.SetWorkerID(id_worker);
                         task.SetStatusID(id_status);
                         task.SetCommentID(id_comment);
                         tasksList.Add(task);
                         //
-                        string str1 = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()}";
+                        string str1 = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";
                         Console.WriteLine(str1);
                         //
                     }
+                    else Console.WriteLine("Неверный формат записи данных.");
                 }
             }
             catch (Exception e)
@@ -153,6 +300,20 @@ namespace AutoReportLab
             time = DateTime.Now;
         }
         
+        public Task(int ID, string Name, string Description, int Worker, int Status, string Comment, DateTime Time)
+        {
+            id = ID;
+            name = Name;
+            description = Description;
+            worker = Worker;
+            id_worker = 0;
+            status = Status;
+            id_status = 0;
+            comment = Comment;
+            id_comment = 0;
+            time = Time;
+        }
+        
         public int GetID() { return id; }
         public string GetName() { return name; }
         public string GetDescription() { return description; }
@@ -173,6 +334,7 @@ namespace AutoReportLab
         public void SetWorker(int Worker) { worker = Worker; }
         public void SetStatus(int Status) { status = Status; }
         public void SetComment(string Comment) { comment = Comment; }
+        public void SetTime(DateTime Time) { time = Time; }
         
         public void SetWorkerID(int ID) { id_worker = ID; }
         public void SetStatusID(int ID) { id_status = ID; }
