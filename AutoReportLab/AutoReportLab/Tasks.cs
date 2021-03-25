@@ -20,20 +20,20 @@ namespace AutoReportLab
             if (!Directory.Exists(pathToTasksDirectory))
             {
                 Directory.CreateDirectory(pathToTasksDirectory);
-                File.Create($"{pathToTasksDirectory}/tasks.txt").Dispose();
+                File.Create(Path.Combine(pathToTasksDirectory, "tasks.txt")).Dispose();
             }
             else
             {
-                if (File.Exists($"{pathToTasksDirectory}/tasks.txt"))
+                if (File.Exists(Path.Combine(pathToTasksDirectory, "tasks.txt")))
                 {
                     ReadTaskFile();
                 }
-                else File.Create($"{pathToTasksDirectory}/tasks.txt").Dispose();
+                File.Create(Path.Combine(pathToTasksDirectory, "tasks.txt")).Dispose();
             }
         }
         
         private List<Task> tasksList = new List<Task>();
-        private string pathToTasksDirectory = $"{Directory.GetCurrentDirectory()}/Tasks";
+        private string pathToTasksDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Tasks");
         
         public void AddTasks(string Name, string Description, int Worker, int Status, string Comment = "no")
         {
@@ -55,7 +55,7 @@ namespace AutoReportLab
         // TODO функция проверки имен (нижний регистр)
         private void WriteTaskFile(Task task)
         {
-            string path = $"{pathToTasksDirectory}/{task.GetName()}.txt";
+            string path = Path.Combine(pathToTasksDirectory, $"{task.GetName()}.txt");
             File.Create(path).Dispose();
             using (StreamWriter writer = new StreamWriter(path))
             {
@@ -121,7 +121,7 @@ namespace AutoReportLab
         
         private void AppendTaskFile(Task task)
         {
-            string path = $"{pathToTasksDirectory}/{task.GetName()}.txt";
+            string path = Path.Combine(pathToTasksDirectory, $"{task.GetName()}.txt");
             using (StreamWriter writer = new StreamWriter(path, true))
             {
                 string str = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";

@@ -10,7 +10,7 @@ namespace AutoReportLab
         internal readonly int workerStatus;
         internal readonly int workerID;
         private List<Worker> workerList = new List<Worker>();
-        private string pathToWorkersDirectory = $"{Directory.GetCurrentDirectory()}/Workers";
+        private string pathToWorkersDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Workers");
         
         
         public Workers()
@@ -22,7 +22,7 @@ namespace AutoReportLab
             }
             else
             {
-                if (File.Exists($"{pathToWorkersDirectory}/users.txt"))
+                if (File.Exists(Path.Combine(pathToWorkersDirectory, "users.txt")))
                 {
                     ReadUsersFromFile();
                     string str = Login();
@@ -70,7 +70,7 @@ namespace AutoReportLab
         
         private void CreateFileUsers()
         {
-            string path = $"{pathToWorkersDirectory}/users.txt";
+            string path = Path.Combine(pathToWorkersDirectory, "users.txt");
             using (FileStream streamWriter = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 using (StreamWriter adminWriter = new StreamWriter(streamWriter))
@@ -274,7 +274,7 @@ namespace AutoReportLab
         private void ReadUsersFromFile()
         {
             workerList.Clear();
-            using (StreamReader usersReader = new StreamReader($"{pathToWorkersDirectory}/users.txt"))
+            using (StreamReader usersReader = new StreamReader(Path.Combine(pathToWorkersDirectory, "users.txt")))
             {
                 string info;
                 while (!usersReader.EndOfStream)
@@ -305,7 +305,7 @@ namespace AutoReportLab
         
         private void UpdateWorkersFile()
         {
-            string path = $"{pathToWorkersDirectory}/users.txt";
+            string path = Path.Combine(pathToWorkersDirectory, "users.txt");
             File.Delete(path);
             foreach (var worker in workerList)
             {

@@ -26,7 +26,6 @@ namespace AutoReportLab
                     break;
             }
         }
-
         public static bool UserIsTeamLeader()
         {
             string choise = "";
