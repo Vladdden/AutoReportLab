@@ -29,6 +29,12 @@ namespace AutoReportLab
                     string[] values = str.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
                     workerID = Convert.ToInt32(values[0]);
                     workerStatus = Convert.ToInt32(values[1]);
+                    string pathToReportsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+                    string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
+                    string pathToDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{workerID}");
+                    string fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+                    if (!File.Exists(Path.Combine(pathToDirectory, fileReportName)))
+                    File.Create(Path.Combine(pathToDirectory, fileReportName)).Dispose();
                 }
                 else
                     CreateFileUsers();
@@ -150,6 +156,22 @@ namespace AutoReportLab
             Console.ReadKey();
         }
 
+        public void CreateReportsFolders()
+        {
+            string pathToReportsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+            string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
+            if (!Directory.Exists(pathToReportsDirectory))
+            {
+                Directory.CreateDirectory(pathToReportsDirectory);
+                Directory.CreateDirectory(pathToWorkersReportsDirectory);
+                foreach (var worker in workerList)
+                {
+                    string pathToDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{worker.GetID()}");
+                    Directory.CreateDirectory(pathToDirectory);
+                }
+            }
+        }
+        
         public void Ierarchy(int n = -1, int LeaderID = -1, int status = 1000, bool recursive = true)
         {
             n++;

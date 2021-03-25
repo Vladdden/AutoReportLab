@@ -90,6 +90,7 @@ namespace AutoReportLab
                                 task.SetStatus(3);
                                 task.SetStatusID(task.GetStatusID() + 1);
                                 task.SetTime(DateTime.Now);
+                                //жэ
                             }
                             AppendTaskFile(task);
                             Console.WriteLine("Значение изменено.");

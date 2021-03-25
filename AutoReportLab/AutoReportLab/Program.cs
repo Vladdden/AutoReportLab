@@ -7,6 +7,7 @@ namespace AutoReportLab
         private static Workers workers = new Workers();
         private static TasksManageSystem tasksManageSystem;
         private static Tasks tasks = new Tasks();
+        private static Reports reports = new Reports(workers);
         public static void Main(string[] args)
         {
             bool isExit = false;
