@@ -19,6 +19,7 @@ namespace AutoReportLab
             {
                 Directory.CreateDirectory(pathToTasksDirectory);
             }
+            else ReadTaskFile();
         }
         
         private List<Task> tasksList = new List<Task>();
@@ -165,7 +166,7 @@ namespace AutoReportLab
             Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
         }
 
-        public int PrintAllTasks(bool choise, int workerId = 0)
+        public int PrintAllTasks(bool choise, int workerId = 1)
         {
             Console.Clear();
             ReadTaskFile();
@@ -175,7 +176,7 @@ namespace AutoReportLab
             {
                 if (workerId != 0)
                 {
-                    if (task.GetWorkerID() == workerId)
+                    if (task.GetWorker() == workerId)
                     {
                         string status = "";
                         switch (task.GetStatus())

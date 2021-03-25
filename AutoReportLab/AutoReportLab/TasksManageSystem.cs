@@ -4,14 +4,15 @@ namespace AutoReportLab
 {
     public class TasksManageSystem
     {
-        public TasksManageSystem(int status)
+        public TasksManageSystem(Workers Workers)
         {
+            this.workers = Workers;
             tasks = new Tasks();
-            workerStatus = status;
+            workerStatus = Workers.workerStatus;
         }
 
         private Tasks tasks;
-        private Workers workers = new Workers();
+        private Workers workers;
         private readonly int workerStatus;
         
         public void Main()
@@ -92,9 +93,10 @@ namespace AutoReportLab
                     Console.WriteLine("1. Открыта.");
                     Console.WriteLine("2. Активна.");
                     Console.WriteLine("3. Решена.");
+                    Console.Write("Выбор: ");
                     newValue = Console.ReadLine();
                     Int32.TryParse(newValue, out num);
-                    while (num != 1 && num != 2 && num != 3)
+                    while (num != 1 || num != 2 || num != 3)
                     {
                         Console.Write("Введен некорректный номер.\nПовторите попытку: ");
                         newValue = Console.ReadLine();

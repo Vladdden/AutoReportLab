@@ -47,7 +47,7 @@ namespace AutoReportLab
                 switch (choise)
                 {
                     case "1":
-                        tasksManageSystem = new TasksManageSystem(workers.workerStatus);
+                        tasksManageSystem = new TasksManageSystem(workers);
                         tasksManageSystem.Main();
                         break;
                     case "2":
@@ -211,7 +211,7 @@ namespace AutoReportLab
             string answer = Console.ReadLine();
             if (answer == "Да" || answer == "да" || answer == "ДА")
             {
-                tasksManageSystem = new TasksManageSystem(workers.workerStatus);
+                tasksManageSystem = new TasksManageSystem(workers);
                 tasksManageSystem.UpdateTasks(tasks.PrintAllTasks(true, workers.workerID));
             }
             else if (answer == "Нет" || answer == "нет" || answer == "НЕТ") return;
