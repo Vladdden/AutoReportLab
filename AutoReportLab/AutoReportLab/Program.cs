@@ -84,7 +84,7 @@ namespace AutoReportLab
                 Console.Clear();
                 Console.WriteLine("Выберите действие (или выход):");
                 Console.WriteLine("1. Просмотреть свои задачи.");
-                Console.WriteLine("2. .");
+                Console.WriteLine("2. Посмотреть свой отчет.");
                 Console.WriteLine("3. Просмотреть своих подчиненных.");
                 Console.WriteLine("4. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
@@ -96,7 +96,7 @@ namespace AutoReportLab
                         ShowWorkerTasks();
                         break;
                     case "2":
-                        //Rectangle();
+                        //Rectangle(); // TODO вывод сделанных задач
                         break;
                     case "3":
                         Console.WriteLine("Ваши подчиненные:");
@@ -209,12 +209,12 @@ namespace AutoReportLab
             tasks.PrintAllTasks(false, workers.workerID);
             Console.WriteLine("Желаете внести изменения (статус, исполняющий сотрудник, комментарий)? ");
             string answer = Console.ReadLine();
-            if (answer != "Да" || answer != "да" || answer != "ДА")
+            if (answer == "Да" || answer == "да" || answer == "ДА")
             {
                 tasksManageSystem = new TasksManageSystem(workers.workerStatus);
                 tasksManageSystem.UpdateTasks(tasks.PrintAllTasks(true, workers.workerID));
             }
-            else if (answer != "Нет" || answer != "нет" || answer != "НЕТ") return;
+            else if (answer == "Нет" || answer == "нет" || answer == "НЕТ") return;
         }
         
         private static void SetBossForWorker()

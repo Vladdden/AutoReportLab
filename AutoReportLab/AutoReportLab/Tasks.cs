@@ -5,9 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-// TODO Функция изменения задач (комментарий, состояние, назначенный сотрудник)
 // TODO Функция вывода всех задач
-
 
 // TODO
 
@@ -20,15 +18,6 @@ namespace AutoReportLab
             if (!Directory.Exists(pathToTasksDirectory))
             {
                 Directory.CreateDirectory(pathToTasksDirectory);
-                File.Create(Path.Combine(pathToTasksDirectory, "tasks.txt")).Dispose();
-            }
-            else
-            {
-                if (File.Exists(Path.Combine(pathToTasksDirectory, "tasks.txt")))
-                {
-                    ReadTaskFile();
-                }
-                File.Create(Path.Combine(pathToTasksDirectory, "tasks.txt")).Dispose();
             }
         }
         
@@ -90,7 +79,7 @@ namespace AutoReportLab
                                 task.SetStatus(3);
                                 task.SetStatusID(task.GetStatusID() + 1);
                                 task.SetTime(DateTime.Now);
-                                //жэ
+                                AppendRepotFile(task);
                             }
                             AppendTaskFile(task);
                             Console.WriteLine("Значение изменено.");
@@ -130,6 +119,23 @@ namespace AutoReportLab
             }
         }
 
+        private void AppendRepotFile(Task task)
+        {
+            string pathToReportsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+            string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
+            string pathToWorkerReportDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{task.GetWorker()}");
+            string fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+            if (!File.Exists(Path.Combine(pathToWorkerReportDirectory, fileReportName)))
+            {
+                using (StreamWriter writer = new StreamWriter(Path.Combine(pathToWorkerReportDirectory, fileReportName), true))
+                {
+                    string str = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";
+                    writer.WriteLine(str);
+                }
+            }
+            
+        }
+        
         public void PrintOneTask(int id)
         {
             Console.WriteLine(" ____________________________________________________________________________________________ ");
@@ -286,12 +292,8 @@ namespace AutoReportLab
                         task.SetStatusID(id_status);
                         task.SetCommentID(id_comment);
                         tasksList.Add(task);
-                        //
-                        string str1 = $"{task.GetID()};{task.GetName()};{task.GetDescription()};{task.GetWorkerID()}:{task.GetWorker()};{task.GetStatusID()}:{task.GetStatus()};{task.GetCommentID()}:{task.GetComment()};{task.GetTime()};";
-                        Console.WriteLine(str1);
-                        //
                     }
-                    else Console.WriteLine("Неверный формат записи данных.");
+                    else Console.WriteLine($"Неверный формат записи данных: {fields.Length}");
                 }
             }
             catch (Exception e)

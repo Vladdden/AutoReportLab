@@ -9,6 +9,8 @@ namespace AutoReportLab
     {
         internal readonly int workerStatus;
         internal readonly int workerID;
+        internal readonly string pathToWorkerReportDirectory;
+        internal readonly string fileReportName;
         private List<Worker> workerList = new List<Worker>();
         private string pathToWorkersDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Workers");
         
@@ -31,10 +33,10 @@ namespace AutoReportLab
                     workerStatus = Convert.ToInt32(values[1]);
                     string pathToReportsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
                     string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
-                    string pathToDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{workerID}");
-                    string fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
-                    if (!File.Exists(Path.Combine(pathToDirectory, fileReportName)))
-                    File.Create(Path.Combine(pathToDirectory, fileReportName)).Dispose();
+                    pathToWorkerReportDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{workerID}");
+                    fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+                    if (!File.Exists(Path.Combine(pathToWorkerReportDirectory, fileReportName)))
+                    File.Create(Path.Combine(pathToWorkerReportDirectory, fileReportName)).Dispose();
                 }
                 else
                     CreateFileUsers();
@@ -163,11 +165,16 @@ namespace AutoReportLab
             if (!Directory.Exists(pathToReportsDirectory))
             {
                 Directory.CreateDirectory(pathToReportsDirectory);
-                Directory.CreateDirectory(pathToWorkersReportsDirectory);
-                foreach (var worker in workerList)
+                if (!Directory.Exists(pathToWorkersReportsDirectory))
                 {
-                    string pathToDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{worker.GetID()}");
-                    Directory.CreateDirectory(pathToDirectory);
+                    Directory.CreateDirectory(pathToWorkersReportsDirectory);
+                    foreach (var worker in workerList)
+                    {
+                        string pathToDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{worker.GetID()}");
+                        if (!Directory.Exists(pathToDirectory))
+                        Directory.CreateDirectory(pathToDirectory);
+                    }
+                
                 }
             }
         }
