@@ -71,9 +71,8 @@ namespace AutoReportLab
                         tasks.PrintOldTasks(workers.workerID);
                         break;
                     case "0":
-                        return true; // TODO убрать return во всех циклах
+                        return true;
                 }
-                Console.WriteLine(); // TODO убрать везде
                 Console.WriteLine("Нажмите Enter, чтобы продолжить");
                 Console.ReadKey();
             }
@@ -112,7 +111,6 @@ namespace AutoReportLab
                     case "0":
                         return true;
                 }
-                Console.WriteLine();
                 Console.WriteLine("Нажмите Enter, чтобы продолжить");
                 Console.ReadKey();
             }
@@ -146,7 +144,6 @@ namespace AutoReportLab
                     case "0":
                         return true;
                 }
-                Console.WriteLine();
                 Console.WriteLine("Нажмите Enter, чтобы продолжить");
                 Console.ReadKey();
             }
