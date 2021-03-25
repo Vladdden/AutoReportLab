@@ -126,7 +126,7 @@ namespace AutoReportLab
             string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
             string pathToWorkerReportDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{task.GetWorker()}");
             string fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
-            if (!File.Exists(Path.Combine(pathToWorkerReportDirectory, fileReportName)))
+            if (File.Exists(Path.Combine(pathToWorkerReportDirectory, fileReportName)))
             {
                 using (StreamWriter writer = new StreamWriter(Path.Combine(pathToWorkerReportDirectory, fileReportName), true))
                 {
@@ -136,9 +136,31 @@ namespace AutoReportLab
             }
             
         }
-        
+
+        public void PrintOldTasks(int id)
+        {
+            Console.Clear();
+            ReadTaskFile();
+            Console.WriteLine(" ____________________________________________________________________________________________ ");
+            Console.WriteLine("| ID |  Status  |       Name        | Worker |           Description/Comment              ");
+            foreach (var task in tasksList)
+            {
+                if (task.GetWorker() == id && task.GetStatus() == 3)
+                {
+                    string status = "Resolved";
+                    Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+                    Console.WriteLine("| {0,-3}| {1,-8} | {2,-18}|   {3,-4} | {4} / {5}  ", task.GetID(), status, task.GetName(), task.GetWorker(), task.GetDescription(), task.GetComment());
+                    break;
+                }
+            }
+            Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
+            Console.WriteLine("Для продолжения нажмите Enter...");
+            Console.ReadKey();
+        }
         public void PrintOneTask(int id)
         {
+            Console.Clear();
+            ReadTaskFile();
             Console.WriteLine(" ____________________________________________________________________________________________ ");
             Console.WriteLine("| ID |  Status  |       Name        | Worker |           Description/Comment              ");
             foreach (var task in tasksList)
@@ -156,6 +178,7 @@ namespace AutoReportLab
                             break;
                         case 3:
                             status = "Resolved";
+                            continue;
                             break;
                     }
                     Console.WriteLine("|____|__________|___________________|________|_______________________________________________");
@@ -176,7 +199,7 @@ namespace AutoReportLab
             {
                 if (workerId != 0)
                 {
-                    if (task.GetWorker() == workerId)
+                    if (task.GetWorker() == workerId && task.GetStatus() != 3)
                     {
                         string status = "";
                         switch (task.GetStatus())
@@ -189,6 +212,7 @@ namespace AutoReportLab
                                 break;
                             case 3:
                                 status = "Resolved";
+                                continue;
                                 break;
                         }
 

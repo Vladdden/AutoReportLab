@@ -21,12 +21,12 @@ namespace AutoReportLab
             while (choise != "0")
             {
                 Console.Clear();
-                Console.Write("Добро пожаловать в систему управления задачами!");
+                Console.WriteLine("Добро пожаловать в систему управления задачами!");
                 Console.WriteLine("Выберите действие:");
                 Console.WriteLine("1. Добавить задачу.");
                 Console.WriteLine("2. Изменить задачу.");
-                Console.WriteLine("3. Поиск задач по критериям.");
-                Console.WriteLine("4. Посмотреть задачи своих подчиненных.");
+                //Console.WriteLine("3. Поиск задач по критериям.");
+                //Console.WriteLine("4. Посмотреть задачи своих подчиненных.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
@@ -70,6 +70,7 @@ namespace AutoReportLab
         {
             int number, num;
             string newValue;
+            Console.Clear();
             tasks.PrintOneTask(ID);
             Console.WriteLine("Выберите действие (номер):");
             Console.WriteLine("1. Изменить статус.");
@@ -82,7 +83,8 @@ namespace AutoReportLab
             {
                 Console.Write("Введен некорректный номер.\nПовторите попытку: ");
                 choise = Console.ReadLine();
-                Int32.TryParse(choise, out number);
+                number = Convert.ToInt32(choise);
+
             }
             Console.Clear();
             tasks.PrintOneTask(ID);
@@ -96,11 +98,11 @@ namespace AutoReportLab
                     Console.Write("Выбор: ");
                     newValue = Console.ReadLine();
                     Int32.TryParse(newValue, out num);
-                    while (num != 1 || num != 2 || num != 3)
+                    while (!(num == 1 || num == 2 || num == 3))
                     {
                         Console.Write("Введен некорректный номер.\nПовторите попытку: ");
                         newValue = Console.ReadLine();
-                        Int32.TryParse(newValue, out num);
+                        num = Convert.ToInt32(newValue);
                     }
                     tasks.UpdateTasks(ID, number, num.ToString());
                     break;

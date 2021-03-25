@@ -40,6 +40,7 @@ namespace AutoReportLab
                 Console.WriteLine("4. Просмотреть своих подчиненных.");
                 Console.WriteLine("5. Просмотреть свои задачи.");
                 Console.WriteLine("6. Просмотреть иерархию сотрудников.");
+                Console.WriteLine("7. Посмотреть решенные задачи (свой отчет).");
                 
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
@@ -66,6 +67,9 @@ namespace AutoReportLab
                     case "6":
                         workers.ShowhIerarchy();
                         break;
+                    case "7":
+                        tasks.PrintOldTasks(workers.workerID);
+                        break;
                     case "0":
                         return true; // TODO убрать return во всех циклах
                 }
@@ -84,7 +88,7 @@ namespace AutoReportLab
                 Console.Clear();
                 Console.WriteLine("Выберите действие (или выход):");
                 Console.WriteLine("1. Просмотреть свои задачи.");
-                Console.WriteLine("2. Посмотреть свой отчет.");
+                Console.WriteLine("2. Посмотреть решенные задачи (свой отчет).");
                 Console.WriteLine("3. Просмотреть своих подчиненных.");
                 Console.WriteLine("4. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
@@ -96,7 +100,7 @@ namespace AutoReportLab
                         ShowWorkerTasks();
                         break;
                     case "2":
-                        //Rectangle(); // TODO вывод сделанных задач
+                        tasks.PrintOldTasks(workers.workerID);
                         break;
                     case "3":
                         Console.WriteLine("Ваши подчиненные:");
@@ -122,25 +126,21 @@ namespace AutoReportLab
             {
                 Console.Clear();
                 Console.WriteLine("Выберите действие (или выход):");
-                Console.WriteLine("1. .");
-                Console.WriteLine("2. Просмотреть свои задачи.");
-                Console.WriteLine("3. Отчет за день.");
-                Console.WriteLine("4. Просмотреть иерархию сотрудников.");
+                Console.WriteLine("1. Просмотреть свои задачи.");
+                Console.WriteLine("2. Посмотреть решенные задачи (свой отчет).");
+                Console.WriteLine("3. Просмотреть иерархию сотрудников.");
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбор: ");
                 choise = Console.ReadLine();
                 switch (choise)
                 {
                     case "1":
-                        //Fio();
-                        break;
-                    case "2":
                         ShowWorkerTasks();
                         break;
-                    case "3":
-                        //Average();
+                    case "2":
+                        tasks.PrintOldTasks(workers.workerID);
                         break;
-                    case "4":
+                    case "3":
                         workers.ShowhIerarchy();
                         break;
                     case "0":

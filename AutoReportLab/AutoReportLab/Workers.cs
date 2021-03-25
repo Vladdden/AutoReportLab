@@ -35,6 +35,7 @@ namespace AutoReportLab
                     string pathToWorkersReportsDirectory = Path.Combine(pathToReportsDirectory, "WorkersReports");
                     pathToWorkerReportDirectory = Path.Combine(pathToWorkersReportsDirectory, $"{workerID}");
                     fileReportName = $"{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+                    CreateReportsFolders();
                     if (!File.Exists(Path.Combine(pathToWorkerReportDirectory, fileReportName)))
                     File.Create(Path.Combine(pathToWorkerReportDirectory, fileReportName)).Dispose();
                 }
